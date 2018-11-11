@@ -125,7 +125,7 @@
     $('#messageForm').on('submit',function (event) {
         event.preventDefault();
 
-        var url = 'https://khafizovfuncs.azurewebstes.net/api/SendMessage';
+        var url = 'https://khafizovfuncs.azurewebsites.net/api/SendMessage';
         var data = $(this).serialize();
 
         $.ajax({
