@@ -11,28 +11,21 @@
 
   <link rel="stylesheet" href="/assets/main.css">
   <link href='https://fonts.googleapis.com/css?family=Marck Script' rel='stylesheet'>
+
   <style>
-    html, body {
-      margin:0;
-      padding:0;
-      height:100%;
+    .sbody {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
     }
-    .full-height {
-      min-height:100%;
-      position:relative;
-    }
-    footer {
-      position:absolute;
-      bottom:0;
-      width:100%;
-    }
-    .cbody {
-      padding-top:80px;
+
+    .dv-content {
+      flex: 1;
     }
   </style>
+
 </head>
-<body>
-  <div class="full-height">
+<body class="sbody">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <div class="container">
     <a class="navbar-brand" href="/">Елена Мухачёва</a>
@@ -66,17 +59,23 @@
 <!--
       <li><a href=""></a></li>
     -->
-    <div class="container cbody">
+    <div class="container dv-content">
         <div class="row">
             <div class="col-md-8">
-                <div class="col-md-8">
-    <form id="form1" method="post" action="https://khafizovfuncs.azurewebsites.net/api/SendMessage" enctype="application/x-www-form-urlencoded">
-      <input class="form-control" name="name" placeholder="Имя..." /><br />
-      <input class="form-control" name="phone" placeholder="Телефон..." /><br />
-      <input class="form-control" name="email" placeholder="E-mail..." /><br />
-      <textarea class="form-control" name="text" placeholder="Напишите Ваш вопрос" style="height:150px;"></textarea><br />
-      <input class="btn btn-primary" type="submit" value="Отправить" /><br /><br />
-    </form>
+                <div class="col-md-8 pt-3">
+  <form id="messageForm">
+    <input class="form-control" name="name" placeholder="Имя..." /><br />
+    <input class="form-control" name="phone" placeholder="Телефон..." /><br />
+    <input class="form-control" name="email" placeholder="E-mail..." /><br />
+    <textarea class="form-control" name="text" placeholder="Напишите Ваш вопрос" style="height:150px;"></textarea><br />
+    <input class="btn btn-primary" type="submit" value="Отправить" /><br /><br />
+  </form>
+  <div id="thanks" class="alert alert-primary d-none" role="alert">
+    Спасибо за Ваше сообщение!
+  </div>
+  <div id="thanks" class="alert alert-primary d-none" role="alert">
+    Ошибка! Сообщение не отправленно.
+  </div>
 </div>
 
             </div>
@@ -106,13 +105,12 @@
             
         </div>
     </div>
-    <footer class="py-5 bg-dark">
+    <footer class="py-5 bg-dark footer">
   <div class="container">
     
     <p class="m-0 text-center text-white">&copy;2017-2018 Елена Мухачёва. Все права защищены.</p>
   </div>
 </footer>
-    </div>
     <script src="/assets/vendor/jquery.min.js"></script>
     <script src="/assets/vendor/popper.min.js"></script>
     <script src="/assets/vendor/bootstrap.min.js"></script>
@@ -120,9 +118,33 @@
 <script>
 (function(){
     $(".nav-link").on("click", function(e){
-    $(".nav-item").find(".active").removeClass("active");
-    $(this).addClass("active");
- })})();
+        $(".nav-item").find(".active").removeClass("active");
+        $(this).addClass("active");
+    });
+
+    $('#messageForm').on('submit',function (event) {
+        event.preventDefault();
+
+        var url = 'https://khafizovfuncs.azurewebstes.net/api/SendMessage';
+        var data = $(this).serialize();
+
+        $.ajax({
+            type:'POST',
+            url: url,
+            data: data,
+            dataType: 'text',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            success: function (response) {
+                document.getElementById('messageForm').classList.add('d-none');
+                document.getElementById('thanks').classList.remove('d-none');      
+            },
+            error: function (error) {
+                document.getElementById('messageForm').classList.add('d-none');
+                document.getElementById('error').classList.remove('d-none');
+            }
+        })
+    })
+})();
 </script>
 
 </html>
